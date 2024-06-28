@@ -1236,8 +1236,6 @@ async def cb_handler(client: Client, query: CallbackQuery):
         link = f"https://telegram.me/{temp.U_NAME}?start=allfiles_{group_id}-{message_id}"
         await query.answer(url=link)
         return
-
-
 async def ai_spell_check(wrong_name):
     async def search_movie(wrong_name):
         ia = Cinemagoer()
@@ -1246,13 +1244,17 @@ async def ai_spell_check(wrong_name):
         return movie_list
     movie_list = await search_movie(wrong_name)
     if not movie_list:
-        return 
-    closest_match = process.extractOne(wrong_name, movie_list)
-    if closest_match and closest_match[1] > 80: 
+        return
+    for _ in range(5):
+        closest_match = process.extractOne(wrong_name, movie_list)
+        if not closest_match or closest_match[1] <= 60:
+            return 
         movie = closest_match[0]
         files, offset, total_results = await get_search_results(movie)
         if files:
-            return movie
+            return movie  
+        movie_list.remove(movie)
+    return
 async def delSticker(sticker):
     try:
         await sticker.delete()
@@ -1451,7 +1453,11 @@ async def auto_filter(client, msg, spoll=False , pm_mode = False):
         except Exception as e:
             print(e)
             if settings["auto_delete"]:
-                k = await message.reply_text(cap + links + del_msg, parse_mode=enums.ParseMode.HTML, reply_markup=InlineKeyboardMarkup(btn), disable_web_page_preview=True)
+                await delSticker(st)
+                try:
+                    k = await message.reply_text(cap + links + del_msg, parse_mode=enums.ParseMode.HTML, reply_markup=InlineKeyboardMarkup(btn), disable_web_page_preview=True)
+                except Exception as e:
+                    print("error", e)
                 await asyncio.sleep(DELETE_TIME)
                 await k.delete()
                 try:
@@ -1480,7 +1486,6 @@ async def advantage_spell_chok(message):
     query = re.sub(
         r"\b(pl(i|e)*?(s|z+|ease|se|ese|(e+)s(e)?)|((send|snd|giv(e)?|gib)(\sme)?)|movie(s)?|new|latest|br((o|u)h?)*|^h(e|a)?(l)*(o)*|mal(ayalam)?|t(h)?amil|file|that|find|und(o)*|kit(t(i|y)?)?o(w)?|thar(u)?(o)*w?|kittum(o)*|aya(k)*(um(o)*)?|full\smovie|any(one)|with\ssubtitle(s)?)",
         "", message.text, flags=re.IGNORECASE)
-    RQST = query.strip()
     query = query.strip() + " movie"
     try:
         movies = await get_poster(search, bulk=True)

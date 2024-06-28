@@ -43,6 +43,7 @@ sᴇɴᴅ ᴍᴇ ᴀɴʏ ᴍᴏᴠɪᴇ ᴏʀ sᴇʀɪᴇs ɴᴀᴍᴇ ᴀɴᴅ 
 😚 ᴍʏ ᴛʀᴜsᴛʏ sᴛᴇᴇᴅ: <a href="https://github.com/Mayuri-Chan/pyrofork">ᴘʏʀᴏғᴏʀᴋ</a>
 🙏🏻 ᴍʏ ᴄʀᴇᴀᴛᴏʀ : ʟᴏʀᴅ ᴋʀɪsʜɴᴀ
 🤡 ᴍʏ ᴍᴀɴᴀɢᴇʀ : <a href="https://telegram.me/biisal">ʙɪɪsᴀʟ</a>
+🧑🏻‍💻 ʀᴇᴘᴏ : <a href="https://github.com/biisal/biisal-filter-bot">ʟɪɴᴋ</a>
 </b>"""
     SUPPORT_GRP_MOVIE_TEXT = '''<b>ʜᴇʏ {}
 
