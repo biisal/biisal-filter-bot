@@ -1,7 +1,7 @@
 from pyrogram import Client, filters , enums
 from info import ADMINS
 import re
-from database import db
+from database.users_chats_db import db
 
 @Client.on_message(filters.command("stream") & filters.user(ADMINS))
 async def set_stream_link(client, message):
