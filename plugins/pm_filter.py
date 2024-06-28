@@ -1247,12 +1247,12 @@ async def ai_spell_check(wrong_name):
         return
     for _ in range(5):
         closest_match = process.extractOne(wrong_name, movie_list)
-        if not closest_match or closest_match[1] <= 60:
+        if not closest_match or closest_match[1] <= 80:
             return 
         movie = closest_match[0]
         files, offset, total_results = await get_search_results(movie)
         if files:
-            return movie  
+            return movie
         movie_list.remove(movie)
     return
 async def delSticker(sticker):
@@ -1288,8 +1288,8 @@ async def auto_filter(client, msg, spoll=False , pm_mode = False):
                 return await advantage_spell_chok(msg)
             return
     else:
-        settings = await get_settings(chat_id , pm_mode=pm_mode)
-        message = msg.reply_to_message  # msg will be callback query
+        settings = await get_settings(msg.message.chat.id , pm_mode=pm_mode)
+        message = msg.message.reply_to_message  # msg will be callback query
         search, files, offset, total_results = spoll
     req = message.from_user.id if message.from_user else 0
     key = f"{message.chat.id}-{message.id}"
@@ -1297,7 +1297,7 @@ async def auto_filter(client, msg, spoll=False , pm_mode = False):
     temp.FILES_ID[f"{message.chat.id}-{message.id}"] = batch_ids
     batch_link = f"batchfiles#{message.chat.id}#{message.id}#{message.from_user.id}"
     temp.CHAT[message.from_user.id] = message.chat.id
-    settings = await get_settings(chat_id , pm_mode=pm_mode)
+    settings = await get_settings(message.chat.id , pm_mode=pm_mode)
     del_msg = f"\n\n<b>⚠️ ᴛʜɪs ᴍᴇssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ ᴀꜰᴛᴇʀ <code>{get_readable_time(DELETE_TIME)}</code> ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs</b>" if settings["auto_delete"] else ''
     links = ""
     if settings["link"]:
@@ -1365,7 +1365,7 @@ async def auto_filter(client, msg, spoll=False , pm_mode = False):
             ])
                              
     if spoll:
-        m = await msg.edit(f"<b><code>{search}</code> ɪs ꜰᴏᴜɴᴅ ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ ꜰᴏʀ ꜰɪʟᴇs 📫</b>")
+        m = await msg.message.edit(f"<b><code>{search}</code> ɪs ꜰᴏᴜɴᴅ ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ ꜰᴏʀ ꜰɪʟᴇs 📫</b>")
         await delSticker(st)
         await asyncio.sleep(1.2)
         await m.delete()
