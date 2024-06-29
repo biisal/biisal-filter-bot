@@ -3,15 +3,14 @@ from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait,
 from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, IS_VERIFY , SETTINGS
 from imdb import Cinemagoer
 import asyncio
-import shortzy 
-from pyrogram.types import Message, InlineKeyboardButton
+from pyrogram.types import Message
 from pyrogram import enums
 import pytz
 import time
 import re
 import os 
 from shortzy import Shortzy
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from typing import Any
 from database.users_chats_db import db
 import requests
@@ -169,13 +168,13 @@ async def groups_broadcast(chat_id, message, is_pin):
         return "Error"
 
 async def get_settings(group_id , pm_mode = False):
-    if pm_mode:
-        settings = SETTINGS.copy()
+    if pm_mode or len(str(group_id)) < 14:
+        return SETTINGS.copy()
     else:
         settings = temp.SETTINGS.get(group_id)
-    if not settings:
-        settings = await db.get_settings(group_id)
-        temp.SETTINGS.update({group_id: settings})
+        if not settings:
+            settings = await db.get_settings(group_id)
+            temp.SETTINGS.update({group_id: settings})
     return settings 
     
 async def save_group_settings(group_id, key, value):

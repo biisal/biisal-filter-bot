@@ -8,14 +8,13 @@ from info import SETTINGS, STICKERS_IDS,PREMIUM_POINT,MAX_BTN, BIN_CHANNEL, USER
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions
 from pyrogram import Client, filters, enums
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid, ChatAdminRequired
-from utils import temp, get_settings, is_check_admin, get_status, get_hash, get_name, get_size, save_group_settings, is_req_subscribed, get_poster, get_status, get_readable_time
+from utils import temp, get_settings, is_check_admin, get_status, get_hash, get_name, get_size, save_group_settings, is_req_subscribed, get_poster, get_status, get_readable_time , imdb
 from database.users_chats_db import db
 from database.ia_filterdb import Media, get_search_results, get_bad_files, get_file_details
 import random
 lock = asyncio.Lock()
 from .components.checkFsub import is_user_fsub
 import traceback
-from imdb import Cinemagoer
 from fuzzywuzzy import process
 BUTTONS = {}
 FILES_ID = {}
@@ -730,8 +729,11 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 await query.answer(script.ALRT_TXT.format(query.from_user.first_name), show_alert=True)    
 
     elif query.data.startswith("checksub"):
-        ident, file_id = query.data.split("#")
-        settings = await get_settings(query.message.chat.id)
+        ident, file_id , grp_id = query.data.split("#")
+        if grp_id != 'None' or grp_id != '':
+            chat_id = grp_id
+        else:
+            chat_id = query.message.chat.id
         if AUTH_CHANNEL and not await is_req_subscribed(client, query):
             await query.answer("ɪ ʟɪᴋᴇ ʏᴏᴜʀ sᴍᴀʀᴛɴᴇss ʙᴜᴛ ᴅᴏɴ'ᴛ ʙᴇ ᴏᴠᴇʀsᴍᴀʀᴛ 😒\nꜰɪʀsᴛ ᴊᴏɪɴ ᴏᴜʀ ᴜᴘᴅᴀᴛᴇs ᴄʜᴀɴɴᴇʟ 😒", show_alert=True)
             return         
@@ -739,24 +741,11 @@ async def cb_handler(client: Client, query: CallbackQuery):
         if not files_:
             return await query.answer('ɴᴏ sᴜᴄʜ ꜰɪʟᴇ ᴇxɪsᴛs 🚫')
         files = files_[0]
-        CAPTION = settings['caption']
-        f_caption = CAPTION.format(
-            file_name = files.file_name,
-            file_size = get_size(files.file_size),
-            file_caption = files.caption
-        )
-        await client.send_cached_media(
-            chat_id=query.from_user.id,
-            file_id=file_id,
-            caption=f_caption,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton('❌ ᴄʟᴏsᴇ ❌', callback_data='close_data')
-                    ]
-                ]
-            )
-        )
+        btn = [[
+            InlineKeyboardButton('🎗️ ɢᴇᴛ ʏᴏᴜʀ ғɪʟᴇ 🎗️', url=f'https://t.me/{temp.U_NAME}?start=file_{chat_id}_{file_id}')
+        ]]
+        reply_markup = InlineKeyboardMarkup(btn)
+        return await query.message.edit(text=f'<b>ᴛʜᴀɴᴋs ғᴏʀ ᴊᴏɪɴɪɴɢ ᴏᴜʀ ᴄʜᴀɴɴᴇʟ 🔥😗\nɢᴇᴛ ʏᴏᴜʀ ғɪʟᴇ : {files.file_name[:20]}.. ʙʏ ᴄʟɪᴄᴋɪɴɢ ᴛʜᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ⚡\n\nJᴀɪ sʜʀᴇᴇ ᴋʀɪsʜɴᴀ 😉</b>',reply_markup=reply_markup)
 
     elif query.data.startswith("stream"):
         user_id = query.from_user.id
@@ -1238,8 +1227,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         return
 async def ai_spell_check(wrong_name):
     async def search_movie(wrong_name):
-        ia = Cinemagoer()
-        search_results = ia.search_movie(wrong_name)
+        search_results = imdb.search_movie(wrong_name)
         movie_list = [movie['title'] for movie in search_results]
         return movie_list
     movie_list = await search_movie(wrong_name)
@@ -1303,7 +1291,7 @@ async def auto_filter(client, msg, spoll=False , pm_mode = False):
     if settings["link"]:
         btn = []
         for file_num, file in enumerate(files, start=1):
-            links += f"""<b>\n\n♻️ <a href=https://t.me/{temp.U_NAME}?start={"pm_mode_" if pm_mode else ''}file_{message.chat.id}_{file.file_id}>[{get_size(file.file_size)}] {' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), file.file_name.split()))} ({file_num})</a></b>"""
+            links += f"""<b>\n\n♻️ <a href=https://t.me/{temp.U_NAME}?start={"pm_mode_" if pm_mode else ''}file_{ADMINS[0] if pm_mode else message.chat.id}_{file.file_id}>[{get_size(file.file_size)}] {' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), file.file_name.split()))} ({file_num})</a></b>"""
     else:
         btn = [[InlineKeyboardButton(text=f"🔗 {get_size(file.file_size)}≽ {get_name(file.file_name)}", url=f'https://telegram.dog/{temp.U_NAME}?start=file_{message.chat.id}_{file.file_id}'),]
                for file in files
@@ -1351,17 +1339,7 @@ async def auto_filter(client, msg, spoll=False , pm_mode = False):
                 ])
         else:
             btn.insert(0,[
-                InlineKeyboardButton("🎭 ᴄʜᴏᴏsᴇ ʟᴀɴɢᴜᴀɢᴇ ✨", callback_data=f"languages#{key}#{offset}#{req}"),
-                ])
-            btn.insert(1, [
-                InlineKeyboardButton("✨ ǫᴜᴀʟɪᴛʏ 🤡", callback_data=f"qualities#{key}#{offset}#{req}"),
-                InlineKeyboardButton("🚩 ʏᴇᴀʀ ⌛", callback_data=f"years#{key}#{offset}#{req}"),
-            ])
-            btn.insert(2, [
-                InlineKeyboardButton("✨ ᴄʜᴏᴏsᴇ season🍿", callback_data=f"seasons#{key}#{offset}#{req}")
-            ])
-            btn.insert(0,[
-                InlineKeyboardButton("No More Pages", user_id=ADMINS)
+                InlineKeyboardButton("No More Pages", user_id=ADMINS[0])
             ])
                              
     if spoll:
@@ -1467,7 +1445,7 @@ async def auto_filter(client, msg, spoll=False , pm_mode = False):
             else:
                 await message.reply_text(cap + links + del_msg, parse_mode=enums.ParseMode.HTML, reply_markup=InlineKeyboardMarkup(btn), disable_web_page_preview=True)
     else:
-        k=await message.reply_text(text=cap + links + del_msg, disable_web_page_preview=True, parse_mode=enums.ParseMode.HTML, reply_markup=InlineKeyboardMarkup(btn), reply_to_message_id=message.id)
+        k = await message.reply_text(text=cap + links + del_msg, disable_web_page_preview=True, reply_markup=InlineKeyboardMarkup(btn), parse_mode=enums.ParseMode.HTML, reply_to_message_id=message.id)
         await delSticker(st)
         if settings['auto_delete']:
             await delSticker(st)

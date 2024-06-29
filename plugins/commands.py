@@ -12,7 +12,7 @@ from pyrogram.errors import ChatAdminRequired, FloodWait
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup , ForceReply
 from database.ia_filterdb import Media, get_file_details, get_bad_files, unpack_new_file_id
 from database.users_chats_db import db
-from utils import get_settings,get_seconds, save_group_settings, is_req_subscribed, get_size, get_shortlink, is_check_admin, get_status, temp, get_readable_time
+from utils import get_settings, save_group_settings, is_req_subscribed, get_size, get_shortlink, is_check_admin, get_status, temp, get_readable_time
 import re
 import base64
 from info import *
@@ -66,9 +66,15 @@ async def tts(client, message):
         try:
             os.remove("tts.mp3")
         except:pass
-
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client:Client, message): 
+    pm_mode = False
+    try:
+         data = message.command[1]
+         if data.startswith('pm_mode_'):
+             pm_mode = True
+    except:
+        pass
     m = message
     user_id = m.from_user.id
     if len(m.command) == 2 and m.command[1].startswith('notcopy'):
@@ -195,19 +201,22 @@ async def start(client:Client, message):
         ]]
 
         if message.command[1] != "subscribe":
+            
             try:
-                kk, grp_id, file_id = message.command[1].split('_', 2)
+                chksub_data = message.command[1].replace('pm_mode_', '') if pm_mode else message.command[1]
+                kk, grp_id, file_id = chksub_data.split('_', 2)
                 pre = 'checksubp' if kk == 'filep' else 'checksub'
                 btn.append(
-                    [InlineKeyboardButton("♻️ ᴛʀʏ ᴀɢᴀɪɴ ♻️", callback_data=f"checksub#{file_id}")]
+                    [InlineKeyboardButton("♻️ ᴛʀʏ ᴀɢᴀɪɴ ♻️", callback_data=f"checksub#{file_id}#{int(grp_id)}")]
                 )
             except (IndexError, ValueError):
+                print('IndexError: ', IndexError)
                 btn.append(
                     [InlineKeyboardButton("♻️ ᴛʀʏ ᴀɢᴀɪɴ ♻️", url=f"https://t.me/{temp.U_NAME}?start={message.command[1]}")]
                 )
         await client.send_message(
             chat_id=message.from_user.id,
-            text="🙁 ғɪʀꜱᴛ ᴊᴏɪɴ ᴏᴜʀ ʙᴀᴄᴋᴜᴘ ᴄʜᴀɴɴᴇʟ ᴛʜᴇɴ ʏᴏᴜ ᴡɪʟʟ ɢᴇᴛ ᴍᴏᴠɪᴇ, ᴏᴛʜᴇʀᴡɪꜱᴇ ʏᴏᴜ ᴡɪʟʟ ɴᴏᴛ ɢᴇᴛ ɪᴛ.\n\nᴄʟɪᴄᴋ ᴊᴏɪɴ ɴᴏᴡ ʙᴜᴛᴛᴏɴ 👇",
+            text="<b>🙁 ғɪʀꜱᴛ ᴊᴏɪɴ ᴏᴜʀ ʙᴀᴄᴋᴜᴘ ᴄʜᴀɴɴᴇʟ ᴛʜᴇɴ ʏᴏᴜ ᴡɪʟʟ ɢᴇᴛ ᴍᴏᴠɪᴇ, ᴏᴛʜᴇʀᴡɪꜱᴇ ʏᴏᴜ ᴡɪʟʟ ɴᴏᴛ ɢᴇᴛ ɪᴛ.\n\nᴄʟɪᴄᴋ ᴊᴏɪɴ ɴᴏᴡ ʙᴜᴛᴛᴏɴ 👇</b>",
             reply_markup=InlineKeyboardMarkup(btn),
             parse_mode=enums.ParseMode.HTML
         )
@@ -236,8 +245,6 @@ async def start(client:Client, message):
             parse_mode=enums.ParseMode.HTML
         )
         
-    data = message.command[1]
-    pm_mode = False
     if data.startswith('pm_mode_'):
         pm_mode = True
         data = data.replace('pm_mode_', '')
@@ -285,17 +292,18 @@ async def start(client:Client, message):
         if not files:
             await message.reply_text("<b>⚠️ ᴀʟʟ ꜰɪʟᴇs ɴᴏᴛ ꜰᴏᴜɴᴅ ⚠️</b>")
             return
+        files_to_delete = []
         for file in files:
-            user_id= message.from_user.id 
+            user_id = message.from_user.id 
             grp_id = temp.CHAT.get(user_id)
-            settings = await get_settings(grp_id , pm_mode=pm_mode)
+            settings = await get_settings(grp_id, pm_mode=pm_mode)
             CAPTION = settings['caption']
             f_caption = CAPTION.format(
-                file_name = file.file_name,
-                file_size = get_size(file.file_size),
+                file_name=file.file_name,
+                file_size=get_size(file.file_size),
                 file_caption=file.caption
             )
-            btn=[[
+            btn = [[
                 InlineKeyboardButton("✛ ᴡᴀᴛᴄʜ & ᴅᴏᴡɴʟᴏᴀᴅ ✛", callback_data=f'stream#{file.file_id}')
             ]]
             toDel = await client.send_cached_media(
@@ -304,14 +312,20 @@ async def start(client:Client, message):
                 caption=f_caption,
                 reply_markup=InlineKeyboardMarkup(btn)
             )
-            delCap = "<b>ʏᴏᴜʀ ғɪʟᴇ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ ᴀғᴛᴇʀ {} ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ᴠɪᴏʟᴀᴛɪᴏɴs!</b>".format(f'{FILE_AUTO_DEL_TIMER / 60} ᴍɪɴᴜᴛᴇs' if FILE_AUTO_DEL_TIMER >= 60 else f'{FILE_AUTO_DEL_TIMER} sᴇᴄᴏɴᴅs')
-            afterDelCap = "<b>ʏᴏᴜʀ ғɪʟᴇ ɪs ᴅᴇʟᴇᴛᴇᴅ ᴀғᴛᴇʀ {} ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ᴠɪᴏʟᴀᴛɪᴏɴs!</b>".format(f'{FILE_AUTO_DEL_TIMER / 60} ᴍɪɴᴜᴛᴇs' if FILE_AUTO_DEL_TIMER >= 60 else f'{FILE_AUTO_DEL_TIMER} sᴇᴄᴏɴᴅs') 
-            replyed = await message.reply(
-                delCap,
-                reply_to_message_id=toDel.id)
-            await asyncio.sleep(FILE_AUTO_DEL_TIMER)
-            await toDel.delete()
-            return await replyed.edit(afterDelCap)
+            files_to_delete.append(toDel)
+
+        delCap = "<b>ᴀʟʟ {} ғɪʟᴇs ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ ᴀғᴛᴇʀ {} ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ᴠɪᴏʟᴀᴛɪᴏɴs!</b>".format(len(files_to_delete), f'{FILE_AUTO_DEL_TIMER / 60} ᴍɪɴᴜᴛᴇs' if FILE_AUTO_DEL_TIMER >= 60 else f'{FILE_AUTO_DEL_TIMER} sᴇᴄᴏɴᴅs')
+        afterDelCap = "<b>ᴀʟʟ {} ғɪʟᴇs ᴀʀᴇ ᴅᴇʟᴇᴛᴇᴅ ᴀғᴛᴇʀ {} ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛ ᴠɪᴏʟᴀᴛɪᴏɴs!</b>".format(len(files_to_delete), f'{FILE_AUTO_DEL_TIMER / 60} ᴍɪɴᴜᴛᴇs' if FILE_AUTO_DEL_TIMER >= 60 else f'{FILE_AUTO_DEL_TIMER} sᴇᴄᴏɴᴅs')
+        replyed = await message.reply(
+            delCap
+        )
+        await asyncio.sleep(FILE_AUTO_DEL_TIMER)
+        for file in files_to_delete:
+            await file.delete()
+        return await replyed.edit(
+            afterDelCap,
+        )
+    if not data:
         return
 
     files_ = await get_file_details(file_id)           
