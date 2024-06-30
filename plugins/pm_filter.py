@@ -8,14 +8,13 @@ from info import SETTINGS, STICKERS_IDS,PREMIUM_POINT,MAX_BTN, BIN_CHANNEL, USER
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions
 from pyrogram import Client, filters, enums
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid, ChatAdminRequired
-from utils import temp, get_settings, is_check_admin, get_status, get_hash, get_name, get_size, save_group_settings, is_req_subscribed, get_poster, get_status, get_readable_time
+from utils import temp, get_settings, is_check_admin, get_status, get_hash, get_name, get_size, save_group_settings, is_req_subscribed, get_poster, get_status, get_readable_time , imdb
 from database.users_chats_db import db
 from database.ia_filterdb import Media, get_search_results, get_bad_files, get_file_details
 import random
 lock = asyncio.Lock()
 from .components.checkFsub import is_user_fsub
 import traceback
-from imdb import Cinemagoer
 from fuzzywuzzy import process
 BUTTONS = {}
 FILES_ID = {}
@@ -1228,8 +1227,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         return
 async def ai_spell_check(wrong_name):
     async def search_movie(wrong_name):
-        ia = Cinemagoer()
-        search_results = ia.search_movie(wrong_name)
+        search_results = imdb.search_movie(wrong_name)
         movie_list = [movie['title'] for movie in search_results]
         return movie_list
     movie_list = await search_movie(wrong_name)
