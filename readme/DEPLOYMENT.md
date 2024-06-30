@@ -230,8 +230,8 @@ python3 bot.py
 - For Koyeb In Builder Section Choose Buildpack option.
 - For Render Use This Build Command: `pip install -r requirements.txt`.
 - For Koyeb You don't need to add Any Build Command.
-- For Run or Start Command Use This Command: `gunicorn -b 0.0.0.0:5001 app:app & python3 bot.py`. Where the 5001 is the Random port number (Change it if you get 'same port error').  
-  In Koyeb You Need to Enable it.
+- For run or start command, use this command: `gunicorn -b 0.0.0.0:5001 app:app & python3 bot.py`. If you encounter a "same port error," change the port number (5001). In Koyeb, you need to enable it.
+- If you are using Render then add a Variable in Environment named `PYTHON_VERSION` with value `3.10.8`.
 - Add All Env Variables In Environment Variables Section.
 
 ### Now Your Bot Is Ready To Deploy🔥
