@@ -8,13 +8,14 @@ from info import SETTINGS, STICKERS_IDS,PREMIUM_POINT,MAX_BTN, BIN_CHANNEL, USER
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions
 from pyrogram import Client, filters, enums
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid, ChatAdminRequired
-from utils import temp, get_settings, is_check_admin, get_status, get_hash, get_name, get_size, save_group_settings, is_req_subscribed, get_poster, get_status, get_readable_time , imdb
+from utils import temp, get_settings, is_check_admin, get_status, get_hash, get_name, get_size, save_group_settings, is_req_subscribed, get_poster, get_status, get_readable_time
 from database.users_chats_db import db
 from database.ia_filterdb import Media, get_search_results, get_bad_files, get_file_details
 import random
 lock = asyncio.Lock()
 from .components.checkFsub import is_user_fsub
 import traceback
+from imdb import Cinemagoer
 from fuzzywuzzy import process
 BUTTONS = {}
 FILES_ID = {}
@@ -1227,7 +1228,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
         return
 async def ai_spell_check(wrong_name):
     async def search_movie(wrong_name):
-        search_results = imdb.search_movie(wrong_name)
+        ia = Cinemagoer()
+        search_results = ia.search_movie(wrong_name)
         movie_list = [movie['title'] for movie in search_results]
         return movie_list
     movie_list = await search_movie(wrong_name)
@@ -1297,7 +1299,7 @@ async def auto_filter(client, msg, spoll=False , pm_mode = False):
                for file in files
               ]
     if offset != "":
-        if total_results >= 3:
+        if total_results >= MAX_BTN:
             btn.insert(0,[
                 InlineKeyboardButton("🎭 ᴄʜᴏᴏsᴇ ʟᴀɴɢᴜᴀɢᴇ ✨", callback_data=f"languages#{key}#{offset}#{req}"),
                 ])
@@ -1313,34 +1315,19 @@ async def auto_filter(client, msg, spoll=False , pm_mode = False):
                 ])
         else:
             btn.insert(0,[
-        InlineKeyboardButton("🎭 ᴄʜᴏᴏsᴇ ʟᴀɴɢᴜᴀɢᴇ ✨", callback_data=f"languages#{key}#{offset}#{req}"),
-        ])
-            btn.insert(1, [
-                InlineKeyboardButton("✨ ǫᴜᴀʟɪᴛʏ 🤡", callback_data=f"qualities#{key}#{offset}#{req}"),
-                InlineKeyboardButton("🚩 ʏᴇᴀʀ ⌛", callback_data=f"years#{key}#{offset}#{req}"),
-            ])
-            btn.insert(2, [
-                InlineKeyboardButton("✨ ᴄʜᴏᴏsᴇ season🍿", callback_data=f"seasons#{key}#{offset}#{req}")
-            ])
-    else:
-        if total_results >= 3:
-            btn.insert(0,[
-                InlineKeyboardButton("🎭 ᴄʜᴏᴏsᴇ ʟᴀɴɢᴜᴀɢᴇ ✨", callback_data=f"languages#{key}#{offset}#{req}"),
-                ])
-            btn.insert(1, [
-                InlineKeyboardButton("✨ ǫᴜᴀʟɪᴛʏ 🤡", callback_data=f"qualities#{key}#{offset}#{req}"),
-                InlineKeyboardButton("🚩 ʏᴇᴀʀ ⌛", callback_data=f"years#{key}#{offset}#{req}"),
-            ])
-            btn.insert(2, [
-                InlineKeyboardButton("✨ ᴄʜᴏᴏsᴇ season🍿", callback_data=f"seasons#{key}#{offset}#{req}")
-            ])
-            btn.insert(3,[
                 InlineKeyboardButton("♻️ sᴇɴᴅ ᴀʟʟ", callback_data=batch_link),
-                ])
-        else:
-            btn.insert(0,[
+            ])
+            btn.insert(1,[
                 InlineKeyboardButton("No More Pages", user_id=ADMINS[0])
             ])
+    else:
+        btn.insert(0,[
+            InlineKeyboardButton("♻️ sᴇɴᴅ ᴀʟʟ", callback_data=batch_link),
+            ])
+
+        btn.insert(1,[
+            InlineKeyboardButton("No More Pages", user_id=ADMINS[0])
+        ])
                              
     if spoll:
         m = await msg.message.edit(f"<b><code>{search}</code> ɪs ꜰᴏᴜɴᴅ ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ ꜰᴏʀ ꜰɪʟᴇs 📫</b>")

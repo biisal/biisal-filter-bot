@@ -321,7 +321,10 @@ async def start(client:Client, message):
         )
         await asyncio.sleep(FILE_AUTO_DEL_TIMER)
         for file in files_to_delete:
-            await file.delete()
+            try:
+                await file.delete()
+            except:
+                pass
         return await replyed.edit(
             afterDelCap,
         )

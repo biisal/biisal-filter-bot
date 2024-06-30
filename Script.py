@@ -240,3 +240,13 @@ Yᴏᴜʀ <ul>ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴ</ul> ᴡɪʟʟ ʙᴇ ᴀᴄᴛɪᴠ
 📆 ᴅᴀᴛᴇ:- <code>{} </code></b>
 
 #verified_{}_completed"""
+
+
+    MOVIES_UPDATE_TXT = """<b>#New_File_Added
+
+Title: {title}
+Rating: {rating}
+Genre: {genre}
+
+Description: {description}
+</b>"""
