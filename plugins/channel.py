@@ -1,12 +1,15 @@
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from info import CHANNELS, MOVIE_UPDATE_CHANNEL, ADMINS
+from info import CHANNELS, MOVIE_UPDATE_CHANNEL, ADMINS , LOG_CHANNEL
 from database.ia_filterdb import save_file, unpack_new_file_id
 from utils import get_poster, temp
 import re
 from Script import script
+from database.users_chats_db import db
+
 
 processed_movies = set()
+media_filter = filters.document | filters.video
 
 media_filter = filters.document | filters.video
 
@@ -37,7 +40,7 @@ async def get_imdb(file_name):
         caption = script.MOVIES_UPDATE_TXT.format(
             title=imdb.get('title'),
             rating=imdb.get('rating'),
-            genre=imdb.get('genre'),
+            genres=imdb.get('genres'),
             description=imdb.get('plot'),
         )
         return imdb.get('title'), imdb.get('poster'), caption
@@ -54,4 +57,9 @@ async def send_movie_updates(bot, file_name, file_id):
         [InlineKeyboardButton('Get File', url=f'https://t.me/{temp.U_NAME}?start=pm_mode_file_{ADMINS[0]}_{file_id}')]
     ]
     reply_markup = InlineKeyboardMarkup(btn)
-    await bot.send_photo(MOVIE_UPDATE_CHANNEL, photo=poster_url, caption=caption, reply_markup=reply_markup)
+    movie_update_channel =await db.movies_update_channel_id()
+    try:
+        await bot.send_photo(movie_update_channel if movie_update_channel else MOVIE_UPDATE_CHANNEL, photo=poster_url, caption=caption, reply_markup=reply_markup)
+    except Exception as e:
+        print('Failed to send movie update. Error - ', e)
+        await bot.send_message(LOG_CHANNEL, f'Failed to send movie update. Error - <code>{e}</b>')

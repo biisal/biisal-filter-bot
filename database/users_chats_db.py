@@ -19,7 +19,8 @@ class Database:
         self.pmMode = mydb.pmMode
         self.stream_link = mydb.stream_link
         self.grp_and_ids = fsubs.grp_and_ids
-        
+        self.movies_update_channel = mydb.movies_update_channel
+
         
     def new_user(self, id, name):
         return dict(
@@ -279,7 +280,10 @@ class Database:
                     else :
                         return myLinks.get("links")[1]
                 else:
-                    return "https://t.me/bisal_files"
+                    if index == 0:
+                        return "https://t.me/bisal_files" , False
+                    else :
+                        return "https://t.me/bisal_files"
         except Exception as e:
             print(f"got err in db set : {e}")
     async def set_stream_link(self,link):
@@ -314,5 +318,13 @@ class Database:
             return True
         else:
             return False
+    async def movies_update_channel_id(self , id=None):
+        if id is None:
+            myLinks = await self.movies_update_channel.find_one({})
+            if myLinks is not None:
+                return myLinks.get("id")
+            else:
+                return None
+        return await self.movies_update_channel.update_one({} , {'$set': {'id': id}} , upsert=True)
 db = Database()
 

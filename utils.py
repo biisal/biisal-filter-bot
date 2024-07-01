@@ -1,20 +1,15 @@
 import logging
 from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait, UserIsBlocked, PeerIdInvalid
-from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, IS_VERIFY , SETTINGS
+from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, IS_VERIFY , SETTINGS , START_IMG
 from imdb import Cinemagoer
 import asyncio
 from pyrogram.types import Message
 from pyrogram import enums
-import pytz
-import time
-import re
-import os 
+import pytz , re , os
 from shortzy import Shortzy
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any
 from database.users_chats_db import db
-import requests
-import aiohttp
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -121,7 +116,7 @@ async def get_poster(query, bulk=False, id=False, file=None):
         'release_date': date,
         'year': movie.get('year'),
         'genres': list_to_str(movie.get("genres")),
-        'poster': movie.get('full-size cover url'),
+        'poster': movie.get('full-size cover url' , START_IMG),
         'plot': plot,
         'rating': str(movie.get("rating")),
         'url':f'https://www.imdb.com/title/tt{movieid}'
@@ -196,13 +191,14 @@ def get_name(name):
     regex = re.sub(r'@\w+', '', name)
     return regex
 
-def list_to_str(k):
+def list_to_str(k):    
     if not k:
         return "N/A"
     elif len(k) == 1:
         return str(k[0])
     else:
-        return ', '.join(f'{elem}, ' for elem in k)
+        return ', '.join(str(item) for item in k)
+
 
 async def get_shortlink(link, grp_id, is_second_shortener=False, is_third_shortener=False , pm_mode=False):
     if not pm_mode:
