@@ -20,7 +20,6 @@ class Database:
         self.stream_link = mydb.stream_link
         self.grp_and_ids = fsubs.grp_and_ids
         self.movies_update_channel = mydb.movies_update_channel
-
         
     def new_user(self, id, name):
         return dict(
@@ -37,6 +36,8 @@ class Database:
         chat = await self.grp.find_one({'id':int(id)})
         if chat:
             return chat.get('settings', self.default)
+        else:
+            await self.grp.update_one({'id': int(id)}, {'$set': {'settings': self.default}} , upsert=True)
         return self.default
 
     async def find_join_req(self, id):

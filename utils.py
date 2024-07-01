@@ -5,11 +5,12 @@ from imdb import Cinemagoer
 import asyncio
 from pyrogram.types import Message
 from pyrogram import enums
-import pytz , re , os
+import pytz, re, os 
 from shortzy import Shortzy
 from datetime import datetime
 from typing import Any
 from database.users_chats_db import db
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -29,7 +30,9 @@ class temp(object):
     USERS_CANCEL = False
     GROUPS_CANCEL = False    
     CHAT = {}
-
+def formate_file_name(file_name):
+    file_name = ' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), file_name.split()))
+    return file_name
 async def is_req_subscribed(bot, query):
     if await db.find_join_req(query.from_user.id):
         return True
@@ -163,13 +166,10 @@ async def groups_broadcast(chat_id, message, is_pin):
         return "Error"
 
 async def get_settings(group_id , pm_mode = False):
-    if pm_mode or len(str(group_id)) < 14:
+    if pm_mode:
         return SETTINGS.copy()
     else:
-        settings = temp.SETTINGS.get(group_id)
-        if not settings:
-            settings = await db.get_settings(group_id)
-            temp.SETTINGS.update({group_id: settings})
+        settings = await db.get_settings(group_id)
     return settings 
     
 async def save_group_settings(group_id, key, value):

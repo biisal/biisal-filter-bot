@@ -12,7 +12,7 @@ from pyrogram.errors import ChatAdminRequired, FloodWait
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup , ForceReply
 from database.ia_filterdb import Media, get_file_details, get_bad_files, unpack_new_file_id
 from database.users_chats_db import db
-from utils import get_settings, save_group_settings, is_req_subscribed, get_size, get_shortlink, is_check_admin, get_status, temp, get_readable_time
+from utils import formate_file_name,  get_settings, save_group_settings, is_req_subscribed, get_size, get_shortlink, is_check_admin, get_status, temp, get_readable_time
 import re
 import base64
 from info import *
@@ -299,7 +299,7 @@ async def start(client:Client, message):
             settings = await get_settings(grp_id, pm_mode=pm_mode)
             CAPTION = settings['caption']
             f_caption = CAPTION.format(
-                file_name=file.file_name,
+                file_name=formate_file_name(file.file_name),
                 file_size=get_size(file.file_size),
                 file_caption=file.caption
             )
@@ -339,7 +339,7 @@ async def start(client:Client, message):
     settings = await get_settings(grp_id , pm_mode=pm_mode)
     CAPTION = settings['caption']
     f_caption = CAPTION.format(
-        file_name = files.file_name,
+        file_name = formate_file_name(files.file_name),
         file_size = get_size(files.file_size),
         file_caption=files.caption
     )
