@@ -1,4 +1,3 @@
-import os
 class script(object):
     START_TXT = """<b> 🎭ᴊᴀɪ sʜʀᴇᴇ ᴋʀɪsʜɴᴀ {} {},
     
@@ -30,6 +29,9 @@ sᴇɴᴅ ᴍᴇ ᴀɴʏ ᴍᴏᴠɪᴇ ᴏʀ sᴇʀɪᴇs ɴᴀᴍᴇ ᴀɴᴅ 
 - /remove_premium this command is used to remove premium
 - /del_stream this command is used to delete stream link
 - /invite this command is used to get invite link for chat
+- /set_muc this command is used to set movie updates chat id
+- /del_muc this command is used to delete movie updates chat id
+- /post_mode this command is used to set post mode for Movies Updates Channel
 </b>"""
     TTS_TXT="""
 <b>• sᴇɴᴅ /tts ᴛᴏ ᴜsᴇ ᴛʜɪs ғᴇᴀᴛᴜʀᴇ</b>"""
@@ -241,12 +243,13 @@ Yᴏᴜʀ <ul>ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴ</ul> ᴡɪʟʟ ʙᴇ ᴀᴄᴛɪᴠ
 
 #verified_{}_completed"""
 
-
     MOVIES_UPDATE_TXT = """<b>#New_File_Added
 
 Title: {title}
 Rating: {rating}
-Genres: {genres}
+Genre: {genres}
 
 Description: {description}
+
+{file_name}
 </b>"""
