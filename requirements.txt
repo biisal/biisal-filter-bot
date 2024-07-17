@@ -31,3 +31,4 @@ werkzeug==2.0.2
 Flask
 itsdangerous==2.0.1
 python-Levenshtein
+edge-tts
