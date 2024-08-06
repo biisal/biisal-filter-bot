@@ -1,11 +1,11 @@
 class script(object):
-    START_TXT = """<b> 🎭ᴊᴀɪ sʜʀᴇᴇ ᴋʀɪsʜɴᴀ {} {},
+    START_TXT = """<b> 🎭ᴊᴀɪ ᴍᴀʜᴀᴋᴀᴀʟ {} {},
     
 <blockquote>ɪᴍ ᴛʜᴇ ᴍᴏsᴛ ᴀᴅᴠᴀɴᴄᴇ ᴀɪ ᴘᴏᴡᴇʀᴅ 🤖 ᴀᴜᴛᴏ ғɪʟᴛᴇʀ ʙᴏᴛ..
-sᴇɴᴅ ᴍᴇ ᴀɴʏ ᴍᴏᴠɪᴇ ᴏʀ sᴇʀɪᴇs ɴᴀᴍᴇ ᴀɴᴅ sᴇᴇ ᴍʏ ᴍᴀɢɪᴄ..✨</blockquote>
-<blockquote>ғᴏʀ ᴍᴏʀᴇ ᴅᴇᴛᴀɪʟs ᴜsᴇ ᴛʜᴇ ʙᴜᴛᴛᴏɴs ʙᴇʟᴏᴡ 🤞🏻</blockquote>
 
-ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : <a href='https://telegram.me/biisal'>ʙɪɪsᴀʟ</a>
+sᴇɴᴅ ᴍᴇ ᴀɴʏ ᴍᴏᴠɪᴇ ᴏʀ sᴇʀɪᴇs ɴᴀᴍᴇ ᴀɴᴅ sᴇᴇ ᴍʏ ᴍᴀɢɪᴄ..✨</blockquote>
+
+ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : <a href='https://telegram.me/JAYxMAHAKAAL'>ᴀʀᴘɪᴛ ꜱʜᴜᴋʟᴀ </a>
 </b>"""
     
     HELP_TXT = """<b>ᴄʟɪᴄᴋ ᴏɴ ᴛʜᴇ ʙᴜᴛᴛᴏɴꜱ ʙᴇʟᴏᴡ ᴛᴏ ɢᴇᴛ ᴅᴏᴄᴜᴍᴇɴᴛᴀᴛɪᴏɴ ᴀʙᴏᴜᴛ ꜱᴘᴇᴄɪꜰɪᴄ ᴍᴏᴅᴜʟᴇꜱ..</b>"""
@@ -36,16 +36,16 @@ sᴇɴᴅ ᴍᴇ ᴀɴʏ ᴍᴏᴠɪᴇ ᴏʀ sᴇʀɪᴇs ɴᴀᴍᴇ ᴀɴᴅ 
     TTS_TXT="""
 <b>• sᴇɴᴅ /tts ᴛᴏ ᴜsᴇ ᴛʜɪs ғᴇᴀᴛᴜʀᴇ</b>"""
 
-    ABOUT_TEXT = """<b>🎭 ᴊᴀɪ sʜʀᴇᴇ ᴋʀɪsʜɴᴀ {},
+    ABOUT_TEXT = """<b>🎭 ᴊᴀɪ ᴍᴀʜᴀᴋᴀᴀʟ {},
     
 🤖 ɪ'ᴍ <a href=https://t.me/{}</a> 
 ⚙️ ᴄʜɪʟʟɪɴɢ ᴏɴ : <a href="https://www.heroku.com/">ʜᴇʀᴏᴋᴜ</a>
 🍿 ʙʀᴀɪɴ ғᴜᴇʟᴇᴅ : <a href="https://www.mongodb.com/">ᴍᴏɴɢᴏ ᴅʙ</a>
 🐍 ᴄᴏᴅɪɴɢ ᴍᴜsᴄʟᴇs : <a href="https://www.python.org/">ᴘʏᴛʜᴏɴ 3</a>
 😚 ᴍʏ ᴛʀᴜsᴛʏ sᴛᴇᴇᴅ: <a href="https://github.com/Mayuri-Chan/pyrofork">ᴘʏʀᴏғᴏʀᴋ</a>
-🙏🏻 ᴍʏ ᴄʀᴇᴀᴛᴏʀ : ʟᴏʀᴅ ᴋʀɪsʜɴᴀ
-🤡 ᴍʏ ᴍᴀɴᴀɢᴇʀ : <a href="https://telegram.me/biisal">ʙɪɪsᴀʟ</a>
-🧑🏻‍💻 ʀᴇᴘᴏ : <a href="https://github.com/biisal/biisal-filter-bot">ʟɪɴᴋ</a>
+🙏🏻 ᴍʏ ᴄʀᴇᴀᴛᴏʀ : ʟᴏʀᴅ ᴍᴀʜᴀᴋᴀᴀʟ
+🤡 ᴍʏ ᴍᴀɴᴀɢᴇʀ : <a href="https://telegram.me/JAYxMAHAKAAL">ᴀʀᴘɪᴛ ꜱʜᴜᴋʟᴀ </a>
+🧑🏻‍💻 ʀᴇᴘᴏ : <a href="https://telegra.ph/file/fa1b9d93ed2cefd867239.jpg">ʟɪɴᴋ</a>
 </b>"""
     SUPPORT_GRP_MOVIE_TEXT = '''<b>ʜᴇʏ {}
 
@@ -54,7 +54,7 @@ sᴇɴᴅ ᴍᴇ ᴀɴʏ ᴍᴏᴠɪᴇ ᴏʀ sᴇʀɪᴇs ɴᴀᴍᴇ ᴀɴᴅ 
 ᴘʟᴇᴀsᴇ ᴊᴏɪɴ ᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɢʀᴏᴜᴘ ᴛᴏ ɢᴇᴛ ✨</b>'''
 
     
-    REF_LINK = '''🔗 <b>Hᴇʀᴇ ɪs ᴏᴜʀ ʀᴇғᴇʀʀᴀʟ ʟɪɴᴋ: <code>https://telegram.me/{}?start=biisal-{}</code>
+    REF_LINK = '''🔗 <b>Hᴇʀᴇ ɪs ᴏᴜʀ ʀᴇғᴇʀʀᴀʟ ʟɪɴᴋ: <code>https://telegram.me/{}?start=JAYxMAHAKAAL-{}</code>
     
 👥 Fᴏʀ ᴇᴠᴇʀʏ ɴᴇᴡ ᴜsᴇʀ ᴡʜᴏ sᴛᴀʀᴛs ᴛʜᴇ ʙᴏᴛ ᴜsɪɴɢ ᴛʜɪs ʟɪɴᴋ, ʏᴏᴜ ᴡɪʟʟ ʀᴇᴄᴇɪᴠᴇ 100 ᴘᴏɪɴᴛs. 
 
